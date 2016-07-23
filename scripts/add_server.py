@@ -18,8 +18,8 @@ from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
 from cmdb.models import *
-def host_add(name, idc, mip, service_type):
-    Host.objects.create(name=name, idc=IDC.objects.get(name=idc), mip=mip, service_type=service_type)
+def host_add(name, idc, mip, service_type, zone_type):
+    Host.objects.create(name=name, idc=IDC.objects.get(name=idc), mip=mip, service_type=service_type, zone_type=zone_type)
 
 
 def main():
@@ -31,7 +31,7 @@ def main():
                 if row[0].find('#') == -1:
                     #print row[0], row[1], row[2], row[3]
                     print "add host: ", row[0]
-                    host_add(row[0], row[1], row[2], row[3])
+                    host_add(row[0], row[1], row[2], row[3], row[4])
     else:
         print "file: " + import_list + " is not exist!"
 
@@ -48,3 +48,5 @@ if __name__ == "__main__":
 #
 #ss = Host(idc=idc[0], name="aa", service_type="nginx" )
 #ss.save()
+#
+#qa-xxx-app02,SLB1,192.168.88.88,app

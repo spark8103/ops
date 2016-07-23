@@ -15,6 +15,8 @@ SERVICE_TYPES = (
     ('app', u"app"),
     ('job', u"job"),
     ('mysql', u"mysql"),
+    ('oracle', u"oracle"),
+    ('ta', u"ta"),
     ('codis', u"codis"),
     ('zookeeper', u"zookeeper"),
     ('dubbo', u"dubbo"),
@@ -25,10 +27,18 @@ SERVICE_TYPES = (
     ('fastdfs', u"fastdfs"),
     ('nginx', u"nginx"),
 )
+ZONE_TYPES = (
+    ('APP', u"APP"),
+    ('DB', u"DB"),
+    ('LOG', u"LOG"),
+    ('BUSINESS', u"BUSINESS"),
+    ('DMZ-WEB', u"DMZ-WEB"),
+    ('DMZ-OUT', u"DMZ-OUT"),
+)
 
 
 class IDC(models.Model):
-    name = models.CharField(u"IDC编码", max_length=64)
+    name = models.CharField(u"IDC编码", max_length=10)
     address = models.CharField(u"地址", max_length=128)
 
     contact = models.CharField(u"联系人", max_length=32, blank=True, null=True)
@@ -50,10 +60,10 @@ class IDC(models.Model):
 
 class Host(models.Model):
     idc = models.ForeignKey(IDC)
-    name = models.CharField(u"主机名", max_length=64, db_index=True)
-    mip = models.GenericIPAddressField(blank=True, null=True, help_text="manager IP")
-    bip = models.GenericIPAddressField(blank=True, null=True, help_text="business IP")
-    vip = models.GenericIPAddressField(blank=True, null=True)
+    name = models.CharField(u"主机名", max_length=30, db_index=True)
+    mip = models.GenericIPAddressField(blank=True, null=True, help_text="manager IP", max_length=15)
+    bip = models.GenericIPAddressField(blank=True, null=True, help_text="business IP", max_length=15)
+    vip = models.GenericIPAddressField(blank=True, null=True, max_length=15)
     status = models.SmallIntegerField(u"状态", choices=SERVER_STATUS, default=0)
 
     core_num = models.SmallIntegerField(choices=[(i * 2, "%s Cores" % (i * 2)) for i in range(1, 19)], default=2)
@@ -63,7 +73,8 @@ class Host(models.Model):
     system = models.CharField(u"System OS", max_length=32, choices=[(i, i) for i in (u"centOS7.2", u"rh6.5", u"windows")], default="centOS7.2")
 
     create_time = models.DateField(auto_now=True)
-    service_type = models.CharField(max_length=32, choices=SERVICE_TYPES, db_index=True)
+    service_type = models.CharField(max_length=16, choices=SERVICE_TYPES, db_index=True)
+    zone_type = models.CharField(max_length=16, choices=ZONE_TYPES, db_index=True)
     description = models.TextField(u"备注", blank=True, null=True)
 
 #    administrator = models.ForeignKey(AUTH_USER_MODEL, verbose_name="Admin")

@@ -86,21 +86,21 @@ class HostAdmin(object):
     #open_web.is_column = True
 
     list_display = ('name', 'mip', 'bip', 'vip', 'service_type',
-                    'status', 'description')
+                    'zone_type', 'status', 'description')
     list_display_links = ('name',)
 
     raw_id_fields = ('idc',)
     style_fields = {'system': "radio-inline"}
 
     search_fields = ['name', 'bip', 'mip', 'vip']
-    list_filter = ['idc', 'status', 'core_num', 'hard_disk', 'memory', ('service_type',xadmin.filters.MultiSelectFieldListFilter)]
+    list_filter = ['idc', 'status', 'core_num', 'hard_disk', 'memory', ('service_type',xadmin.filters.MultiSelectFieldListFilter), ('zone_type',xadmin.filters.MultiSelectFieldListFilter)]
     
-    list_quick_filter = ['service_type',{'field':'idc__name','limit':10}]
+    list_quick_filter = ['service_type', 'zone_type', {'field':'idc__name','limit':10}]
 #    list_bookmarks = [{'title': "Need Guarantee", 'query': {'status__exact': 2}, 'order': ('-guarantee_date',), 'cols': ('brand', 'guarantee_date', 'service_type')}]
 
     show_detail_fields = ('idc',)
     list_editable = (
-        'name', 'bip', 'mip', 'vip', 'service_type', 'status', 'description')
+        'name', 'bip', 'mip', 'vip', 'service_type', 'zone_type', 'status', 'description')
     save_as = True
 
     #aggregate_fields = {"guarantee_date": "min"}
@@ -119,7 +119,7 @@ class HostAdmin(object):
                     ),
                 Tab('Extend Fields',
                     Fieldset('扩展信息',
-                             Row('idc', 'service_type'),
+                             Row('idc', 'service_type', 'zone_type'),
                              Row('core_num', AppendedText(
                                  'hard_disk', 'G'), AppendedText('memory', "G")),
                              'status'
@@ -144,7 +144,7 @@ class HostGroupAdmin(object):
     list_display = ('name', 'description')
     list_display_links = ('name',)
 
-    search_fields = ['name']
+    search_fields = ['name'] 
 #    style_fields = {'hosts': 'checkbox-inline'}
 
 
